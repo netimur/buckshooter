@@ -2,6 +2,8 @@ package com.netimur.buckshooter.domain.di
 
 import com.netimur.buckshooter.data.repository.CartridgesRepository
 import com.netimur.buckshooter.domain.usecases.LoadCartridgesUseCase
+import com.netimur.buckshooter.domain.usecases.ObserveBlankCartridgesUseCase
+import com.netimur.buckshooter.domain.usecases.ObserveCombatCartridgesUseCase
 import com.netimur.buckshooter.domain.usecases.ShootBlankCartridgeUseCase
 import com.netimur.buckshooter.domain.usecases.ShootCombatCartridgeUseCase
 import dagger.Module
@@ -25,5 +27,15 @@ class CartridgesUseCasesModule {
     @Provides
     fun provideCombatBlankCartridgeUseCase(cartridgesRepository: CartridgesRepository): ShootCombatCartridgeUseCase {
         return ShootCombatCartridgeUseCase(cartridgesRepository = cartridgesRepository)
+    }
+
+    @Provides
+    fun provideObserveCombatCartridgeUseCase(cartridgesRepository: CartridgesRepository): ObserveCombatCartridgesUseCase {
+        return ObserveCombatCartridgesUseCase(cartridgesRepository = cartridgesRepository)
+    }
+
+    @Provides
+    fun provideObserveBlankCartridgeUseCase(cartridgesRepository: CartridgesRepository): ObserveBlankCartridgesUseCase {
+        return ObserveBlankCartridgesUseCase(cartridgesRepository = cartridgesRepository)
     }
 }
