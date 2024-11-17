@@ -2,6 +2,10 @@ package com.netimur.buckshooter.ui.gamesetting
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.netimur.buckshooter.data.model.Cartridge
+import com.netimur.buckshooter.data.model.CartridgeOrdinalNumber
+import com.netimur.buckshooter.data.model.CartridgeType
+import com.netimur.buckshooter.domain.usecases.LoadCartridgesUseCase
 import com.netimur.buckshooter.ui.gamesetting.event.AddBlankCartridgeEvent
 import com.netimur.buckshooter.ui.gamesetting.event.AddCombatCartridgeEvent
 import com.netimur.buckshooter.ui.gamesetting.event.ApplySettingEvent
@@ -12,6 +16,7 @@ import com.netimur.buckshooter.ui.gamesetting.event.ResetBlankCartridgesCountEve
 import com.netimur.buckshooter.ui.gamesetting.event.ResetCombatCartridgesCountEvent
 import com.netimur.buckshooter.ui.gamesetting.event.SelectBlankCartridgeChipsEvent
 import com.netimur.buckshooter.ui.gamesetting.event.SelectCombatCartridgeChipsEvent
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -19,8 +24,13 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-internal class GameSettingViewModel : ViewModel() {
+@HiltViewModel
+internal class GameSettingViewModel @Inject constructor(
+    private val loadCartridgesUseCase: LoadCartridgesUseCase
+) : ViewModel() {
     private val combatCartridgesFlow = MutableStateFlow(0)
     private val blankCartridgesFlow = MutableStateFlow(0)
     private val isCombatCounterShakingFlow = MutableStateFlow(false)
@@ -69,8 +79,36 @@ internal class GameSettingViewModel : ViewModel() {
             }
 
             ApplySettingEvent -> {
-                // STORE Info to database
+                viewModelScope.launch {
+                    runCatching {
+                        loadCartridgesUseCase(
+                            cartridges = generateBlankCartridges() + generateCombatCartridges()
+                        )
+                    }.onFailure {
+                        // TODO Add Error handling
+                    }
+                }
             }
+        }
+    }
+
+    private fun generateBlankCartridges(): List<Cartridge> {
+        val blankCartridgesCount = blankCartridgesFlow.value
+        return List(blankCartridgesCount) {
+            Cartridge(
+                orderNumber = CartridgeOrdinalNumber.Unknown,
+                cartridgeType = CartridgeType.BLANK
+            )
+        }
+    }
+
+    private fun generateCombatCartridges(): List<Cartridge> {
+        val combatCartridgesCount = combatCartridgesFlow.value
+        return List(combatCartridgesCount) {
+            Cartridge(
+                orderNumber = CartridgeOrdinalNumber.Unknown,
+                cartridgeType = CartridgeType.COMBAT
+            )
         }
     }
 
