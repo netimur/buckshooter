@@ -1,5 +1,6 @@
 package com.netimur.buckshooter.ui.gamesetting
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.netimur.buckshooter.data.model.Cartridge
@@ -16,10 +17,13 @@ import com.netimur.buckshooter.ui.gamesetting.event.ResetBlankCartridgesCountEve
 import com.netimur.buckshooter.ui.gamesetting.event.ResetCombatCartridgesCountEvent
 import com.netimur.buckshooter.ui.gamesetting.event.SelectBlankCartridgeChipsEvent
 import com.netimur.buckshooter.ui.gamesetting.event.SelectCombatCartridgeChipsEvent
+import com.netimur.buckshooter.ui.gamesetting.navigation.OpenGameProcess
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.stateIn
@@ -35,6 +39,10 @@ internal class GameSettingViewModel @Inject constructor(
     private val blankCartridgesFlow = MutableStateFlow(0)
     private val isCombatCounterShakingFlow = MutableStateFlow(false)
     private val isBlankCounterShakingFlow = MutableStateFlow(false)
+
+    private val _navigationEvent: MutableSharedFlow<OpenGameProcess> =
+        MutableSharedFlow(extraBufferCapacity = 5)
+    val navigationEvent = _navigationEvent.asSharedFlow()
 
     val uiState = combine(
         combatCartridgesFlow,
@@ -86,6 +94,9 @@ internal class GameSettingViewModel @Inject constructor(
                         )
                     }.onFailure {
                         // TODO Add Error handling
+                        Log.e("fuck y", null, it)
+                    }.onSuccess {
+                        _navigationEvent.tryEmit(OpenGameProcess)
                     }
                 }
             }

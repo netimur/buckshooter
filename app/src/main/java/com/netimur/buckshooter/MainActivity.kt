@@ -23,7 +23,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             val navController = rememberNavController()
             BuckshooterTheme {
-                NavHost(navController = navController, startDestination = GameProcess) {
+                NavHost(navController = navController, startDestination = GameSetting) {
                     composable<GameSetting> {
                         GameSettingScreen(
                             startGame = {

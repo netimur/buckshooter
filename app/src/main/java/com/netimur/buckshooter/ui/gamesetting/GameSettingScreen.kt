@@ -11,6 +11,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -21,6 +22,7 @@ import com.netimur.buckshooter.ui.gamesetting.components.cartridge.BlankCartridg
 import com.netimur.buckshooter.ui.gamesetting.components.cartridge.CombatCartridgeController
 import com.netimur.buckshooter.ui.gamesetting.event.AddBlankCartridgeEvent
 import com.netimur.buckshooter.ui.gamesetting.event.AddCombatCartridgeEvent
+import com.netimur.buckshooter.ui.gamesetting.event.ApplySettingEvent
 import com.netimur.buckshooter.ui.gamesetting.event.GameSettingEvent
 import com.netimur.buckshooter.ui.gamesetting.event.MinusBlankCartridgeEvent
 import com.netimur.buckshooter.ui.gamesetting.event.MinusCombatCartridgeEvent
@@ -32,9 +34,13 @@ import com.netimur.buckshooter.ui.gamesetting.event.SelectCombatCartridgeChipsEv
 @Composable
 internal fun GameSettingScreen(startGame: () -> Unit, viewModel: GameSettingViewModel) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    LaunchedEffect(Unit) {
+        viewModel.navigationEvent.collect {
+            startGame()
+        }
+    }
     GameSettingScreenContent(
         uiState = uiState,
-        onApplySettingButtonClick = startGame,
         handleEvent = viewModel::handleEvent
     )
 }
@@ -42,7 +48,6 @@ internal fun GameSettingScreen(startGame: () -> Unit, viewModel: GameSettingView
 @Composable
 private fun GameSettingScreenContent(
     uiState: GameSettingUIState,
-    onApplySettingButtonClick: () -> Unit,
     handleEvent: (event: GameSettingEvent) -> Unit
 ) {
     Scaffold(
@@ -98,7 +103,7 @@ private fun GameSettingScreenContent(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 20.dp, vertical = 10.dp),
-                    onClick = onApplySettingButtonClick
+                    onClick = { handleEvent(ApplySettingEvent) }
                 )
             }
 
@@ -126,7 +131,6 @@ private fun ApplyGameSettingButton(modifier: Modifier = Modifier, onClick: () ->
 private fun GameSettingScreenPreview() {
     GameSettingScreenContent(
         uiState = GameSettingUIState(0, 0, false, false),
-        onApplySettingButtonClick = {},
         handleEvent = {}
     )
 }

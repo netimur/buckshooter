@@ -25,6 +25,6 @@ interface CartridgesDao {
     @Query(value = "SELECT * FROM cartridges")
     fun observeCartridges(): Flow<List<CartridgeEntity>>
 
-    @Delete(entity = CartridgeEntity::class)
+    @Query(value = "DELETE FROM cartridges")
     suspend fun clearCartridges()
 }
