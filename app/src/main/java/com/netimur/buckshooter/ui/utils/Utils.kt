@@ -7,5 +7,6 @@ internal fun CartridgeType.getSettingColor(): Color {
     return when (this) {
         CartridgeType.BLANK -> Color(0xFF1770B8)
         CartridgeType.COMBAT -> Color(0xFFB81717)
+        CartridgeType.UNKNOWN -> Color.White
     }
 }
