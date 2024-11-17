@@ -6,7 +6,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import com.netimur.buckshooter.ui.gamesetting.CartridgeType
+import com.netimur.buckshooter.data.model.CartridgeType
 import com.netimur.buckshooter.ui.utils.getSettingColor
 
 @Composable

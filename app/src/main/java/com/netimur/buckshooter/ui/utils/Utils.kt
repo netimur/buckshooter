@@ -1,7 +1,7 @@
 package com.netimur.buckshooter.ui.utils
 
 import androidx.compose.ui.graphics.Color
-import com.netimur.buckshooter.ui.gamesetting.CartridgeType
+import com.netimur.buckshooter.data.model.CartridgeType
 
 internal fun CartridgeType.getSettingColor(): Color {
     return when (this) {

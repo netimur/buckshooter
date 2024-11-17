@@ -4,7 +4,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import com.netimur.buckshooter.ui.gamesetting.CartridgeType
+import com.netimur.buckshooter.data.model.CartridgeType
 import com.netimur.buckshooter.ui.gamesetting.components.countchips.CountChipsRow
 import com.netimur.buckshooter.ui.gamesetting.components.countchips.CountChipValue
 import com.netimur.buckshooter.ui.gamesetting.components.countchips.countChips
