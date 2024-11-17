@@ -23,7 +23,9 @@ import com.netimur.buckshooter.ui.gamesetting.GameSettingViewModel
 import com.netimur.buckshooter.ui.routes.GameProcess
 import com.netimur.buckshooter.ui.routes.GameSetting
 import com.netimur.buckshooter.ui.theme.BuckshooterTheme
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
