@@ -20,7 +20,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.netimur.buckshooter.ui.gamesetting.CartridgeType
-import com.netimur.buckshooter.ui.gamesetting.utils.getSettingColor
+import com.netimur.buckshooter.ui.utils.getSettingColor
 
 @Composable
 internal fun CartridgeCard(

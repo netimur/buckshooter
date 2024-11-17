@@ -5,7 +5,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.netimur.buckshooter.ui.gamesetting.CartridgeType
-import com.netimur.buckshooter.ui.gamesetting.utils.getSettingColor
+import com.netimur.buckshooter.ui.utils.getSettingColor
 
 @Composable
 internal fun MinusButton(modifier: Modifier = Modifier, cartridgeType: CartridgeType) {
