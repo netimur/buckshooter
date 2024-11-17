@@ -16,10 +16,10 @@ interface CartridgesDao {
     @Insert(entity = CartridgeEntity::class, onConflict = OnConflictStrategy.REPLACE)
     suspend fun addCartridges(cartridges: List<CartridgeEntity>)
 
-    @Query(value = "DELETE FROM cartridges WHERE cartridge_type='BLANK' LIMIT 1")
+    @Query(value = "DELETE FROM cartridges WHERE cartridge_type='BLANK'")
     suspend fun removeBlankCartridge()
 
-    @Query(value = "DELETE FROM cartridges WHERE cartridge_type='COMBAT' LIMIT 1")
+    @Query(value = "DELETE FROM cartridges WHERE cartridge_type='COMBAT'")
     suspend fun removeCombatCartridge()
 
     @Query(value = "SELECT * FROM cartridges")
