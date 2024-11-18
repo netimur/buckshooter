@@ -2,6 +2,8 @@ package com.netimur.buckshooter.ui.gameprocess
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.netimur.buckshooter.data.model.CartridgeType
+import com.netimur.buckshooter.data.repository.CartridgesRepository
 import com.netimur.buckshooter.domain.usecases.ObserveBlankCartridgesUseCase
 import com.netimur.buckshooter.domain.usecases.ObserveCombatCartridgesUseCase
 import com.netimur.buckshooter.domain.usecases.ShootBlankCartridgeUseCase
@@ -15,7 +17,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.stateIn
@@ -28,7 +29,8 @@ internal class GameProcessViewModel @Inject constructor(
     private val shootCombatCartridgeUseCase: ShootCombatCartridgeUseCase,
     private val shootBlankCartridgeUseCase: ShootBlankCartridgeUseCase,
     private val observeBlankCartridgesUseCase: ObserveBlankCartridgesUseCase,
-    private val observeCombatCartridgesUseCase: ObserveCombatCartridgesUseCase
+    private val observeCombatCartridgesUseCase: ObserveCombatCartridgesUseCase,
+    private val cartridgesRepository: CartridgesRepository
 ) : ViewModel() {
     private val blankCartridgesCountFlow = MutableStateFlow(0)
     private val combatCartridgesCountFlow = MutableStateFlow(0)
@@ -49,22 +51,18 @@ internal class GameProcessViewModel @Inject constructor(
     )
 
     init {
-        observeBlankCartridges()
-        observeCombatCartridges()
+        observeCartridges()
     }
 
-    private fun observeBlankCartridges() {
+    private fun observeCartridges() {
         viewModelScope.launch {
-            observeBlankCartridgesUseCase().catch { }.collect { cartridges ->
-                blankCartridgesCountFlow.update { cartridges.count() }
-            }
-        }
-    }
-
-    private fun observeCombatCartridges() {
-        viewModelScope.launch {
-            observeCombatCartridgesUseCase().catch { }.collect { cartridges ->
-                combatCartridgesCountFlow.update { cartridges.size }
+            cartridgesRepository.observeCartridges().collect { cartridges ->
+                blankCartridgesCountFlow.update {
+                    cartridges.count { it.cartridgeType == CartridgeType.BLANK }
+                }
+                combatCartridgesCountFlow.update {
+                    cartridges.count { it.cartridgeType == CartridgeType.COMBAT }
+                }
             }
         }
     }

@@ -34,14 +34,15 @@ class CartridgesRepositoryImpl(private val cartridgesDao: CartridgesDao) : Cartr
     override suspend fun removeCombatCartridge() {
         withContext(Dispatchers.IO) {
             cartridgesDao.firstCombatCartridgeOrNull()?.let {
-                cartridgesDao.removeCartridge(it)
+                cartridgesDao.removeCartridgeById(it.id)
             }
         }
     }
 
     override fun observeCartridges(): Flow<List<Cartridge>> {
-        return cartridgesDao.observeCartridges().map { it.mapList { toDomain() } }
-
+        return cartridgesDao.observeCartridges().map {
+            it.mapList { toDomain() }
+        }
     }
 
     override suspend fun clearCartridges() {
