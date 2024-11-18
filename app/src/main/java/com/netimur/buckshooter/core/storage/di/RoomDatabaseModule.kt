@@ -2,7 +2,7 @@ package com.netimur.buckshooter.core.storage.di
 
 import android.content.Context
 import androidx.room.Room
-import com.netimur.buckshooter.core.storage.dao.CartridgesDao
+import com.netimur.buckshooter.core.storage.dao.ShellsDao
 import com.netimur.buckshooter.core.storage.database.BuckshooterDatabase
 import dagger.Module
 import dagger.Provides
@@ -23,7 +23,7 @@ class RoomDatabaseModule {
     }
 
     @Provides
-    fun provideCartridgesDao(database: BuckshooterDatabase): CartridgesDao {
-        return database.cartridgesDao()
+    fun provideShellsDao(database: BuckshooterDatabase): ShellsDao {
+        return database.ShellsDao()
     }
 }

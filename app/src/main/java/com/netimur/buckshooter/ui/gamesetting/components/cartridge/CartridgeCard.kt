@@ -1,4 +1,4 @@
-package com.netimur.buckshooter.ui.gamesetting.components.cartridge
+package com.netimur.buckshooter.ui.gamesetting.components.Shell
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -19,12 +19,12 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.netimur.buckshooter.data.model.CartridgeType
+import com.netimur.buckshooter.data.model.ShellType
 import com.netimur.buckshooter.ui.utils.getSettingColor
 
 @Composable
-internal fun CartridgeCard(
-    modifier: Modifier = Modifier, cartridgeType: CartridgeType,
+internal fun ShellCard(
+    modifier: Modifier = Modifier, shellType: ShellType,
     onAddButtonClick: () -> Unit,
     onMinusButtonClick: () -> Unit
 ) {
@@ -36,7 +36,7 @@ internal fun CartridgeCard(
             )
             .border(
                 width = 2.dp,
-                color = cartridgeType.getSettingColor(),
+                color = shellType.getSettingColor(),
                 shape = RoundedCornerShape(corner = CornerSize(size = 16.dp))
             )
             .clip(
@@ -53,7 +53,7 @@ internal fun CartridgeCard(
             Box(
                 modifier = Modifier
                     .background(
-                        color = cartridgeType.getSettingColor(),
+                        color = shellType.getSettingColor(),
                         shape = RoundedCornerShape(corner = CornerSize(size = 16.dp))
                     )
                     .padding(end = 16.dp)
@@ -66,14 +66,14 @@ internal fun CartridgeCard(
             ) {
                 Text(
                     modifier = Modifier.padding(all = 16.dp),
-                    text = "Add ${cartridgeType.name.lowercase()}",
+                    text = "Add ${shellType.name.lowercase()}",
                     style = MaterialTheme.typography.bodyMedium.copy(
                         color = Color.White,
                         fontWeight = FontWeight.Bold
                     )
                 )
             }
-            MinusButton(cartridgeType = cartridgeType)
+            MinusButton(shellType = shellType)
         }
     }
 }

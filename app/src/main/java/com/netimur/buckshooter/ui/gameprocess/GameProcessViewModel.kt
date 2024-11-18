@@ -2,18 +2,22 @@ package com.netimur.buckshooter.ui.gameprocess
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.netimur.buckshooter.data.model.CartridgeType
-import com.netimur.buckshooter.data.repository.CartridgesRepository
-import com.netimur.buckshooter.domain.usecases.ObserveBlankCartridgesUseCase
-import com.netimur.buckshooter.domain.usecases.ObserveCombatCartridgesUseCase
-import com.netimur.buckshooter.domain.usecases.ShootBlankCartridgeUseCase
-import com.netimur.buckshooter.domain.usecases.ShootCombatCartridgeUseCase
+import com.netimur.buckshooter.data.model.ShellType
+import com.netimur.buckshooter.data.repository.ShellsRepository
+import com.netimur.buckshooter.domain.usecases.ShootBlankShellUseCase
+import com.netimur.buckshooter.domain.usecases.ShootLiveShellUseCase
+import com.netimur.buckshooter.ui.gameprocess.event.BurnerPhoneClickEvent
+import com.netimur.buckshooter.ui.gameprocess.event.CloseBurnerPhoneEvent
 import com.netimur.buckshooter.ui.gameprocess.event.GameProcessEvent
+import com.netimur.buckshooter.ui.gameprocess.event.ResetBurnerPhoneOrderNumberEvent
+import com.netimur.buckshooter.ui.gameprocess.event.SelectBurnerPhoneShellOrderEvent
+import com.netimur.buckshooter.ui.gameprocess.event.SelectBurnerPhoneShellTypeEvent
 import com.netimur.buckshooter.ui.gameprocess.event.ShootBlankEvent
-import com.netimur.buckshooter.ui.gameprocess.event.ShootCombatEvent
+import com.netimur.buckshooter.ui.gameprocess.event.ShootLiveEvent
 import com.netimur.buckshooter.ui.gameprocess.event.UsePhoneEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -26,23 +30,30 @@ import javax.inject.Inject
 
 @HiltViewModel
 internal class GameProcessViewModel @Inject constructor(
-    private val shootCombatCartridgeUseCase: ShootCombatCartridgeUseCase,
-    private val shootBlankCartridgeUseCase: ShootBlankCartridgeUseCase,
-    private val observeBlankCartridgesUseCase: ObserveBlankCartridgesUseCase,
-    private val observeCombatCartridgesUseCase: ObserveCombatCartridgesUseCase,
-    private val cartridgesRepository: CartridgesRepository
+    private val shootLiveShellUseCase: ShootLiveShellUseCase,
+    private val shootBlankShellUseCase: ShootBlankShellUseCase,
+    private val shellsRepository: ShellsRepository
 ) : ViewModel() {
-    private val blankCartridgesCountFlow = MutableStateFlow(0)
-    private val combatCartridgesCountFlow = MutableStateFlow(0)
+    private val blankShellsCountFlow = MutableStateFlow(0)
+    private val liveShellsCountFlow = MutableStateFlow(0)
+    private val burnerPhoneStateFlow = MutableStateFlow(
+        BurnerPhoneState(
+            isExpanded = false,
+            selectedOrderNumber = null,
+            selectedShellType = null
+        )
+    )
     val uiState: StateFlow<GameProcessUIState> = combine(
-        blankCartridgesCountFlow,
-        combatCartridgesCountFlow
-    ) { blankCartridgesCount, combatCartridgesCount ->
+        blankShellsCountFlow,
+        liveShellsCountFlow,
+        burnerPhoneStateFlow
+    ) { blankShellsCount, liveShellsCount, burnerPhoneState ->
         GameProcessUIState(
-            cartridgesCount = blankCartridgesCount + combatCartridgesCount,
-            blankCartridgesCount = blankCartridgesCount,
-            combatCartridgesCount = combatCartridgesCount,
-            isCartridgeSwapUsed = false
+            shellsCount = blankShellsCount + liveShellsCount,
+            blankShellsCount = blankShellsCount,
+            liveShellsCount = liveShellsCount,
+            isInverterEnabled = false,
+            burnerPhoneState = burnerPhoneState
         )
     }.flowOn(Dispatchers.Default).stateIn(
         scope = viewModelScope,
@@ -50,18 +61,21 @@ internal class GameProcessViewModel @Inject constructor(
         initialValue = GameProcessUIState.empty
     )
 
+    private var observeShellsJob: Job? = null
+
     init {
-        observeCartridges()
+        observeShells()
     }
 
-    private fun observeCartridges() {
-        viewModelScope.launch {
-            cartridgesRepository.observeCartridges().collect { cartridges ->
-                blankCartridgesCountFlow.update {
-                    cartridges.count { it.cartridgeType == CartridgeType.BLANK }
+    private fun observeShells() {
+        observeShellsJob?.cancel()
+        observeShellsJob = viewModelScope.launch {
+            shellsRepository.observeShells().collect { shells ->
+                blankShellsCountFlow.update {
+                    shells.count { it.shellType == ShellType.BLANK }
                 }
-                combatCartridgesCountFlow.update {
-                    cartridges.count { it.cartridgeType == CartridgeType.COMBAT }
+                liveShellsCountFlow.update {
+                    shells.count { it.shellType == ShellType.LIVE }
                 }
             }
         }
@@ -70,20 +84,41 @@ internal class GameProcessViewModel @Inject constructor(
     fun handleEvent(event: GameProcessEvent) {
         when (event) {
             ShootBlankEvent -> shootBlank()
-            ShootCombatEvent -> shootCombat()
+            ShootLiveEvent -> shootLive()
             is UsePhoneEvent -> {}
+            BurnerPhoneClickEvent -> {
+                burnerPhoneStateFlow.update {
+                    it.copy(
+                        isExpanded = true
+                    )
+                }
+            }
+
+            CloseBurnerPhoneEvent -> {
+                burnerPhoneStateFlow.update {
+                    it.copy(
+                        isExpanded = false
+                    )
+                }
+            }
+
+            ResetBurnerPhoneOrderNumberEvent -> {}
+            is SelectBurnerPhoneShellOrderEvent -> {}
+            is SelectBurnerPhoneShellTypeEvent -> {}
         }
     }
 
     private fun shootBlank() {
         viewModelScope.launch {
-            shootBlankCartridgeUseCase()
+            shootBlankShellUseCase()
+            observeShells()
         }
     }
 
-    private fun shootCombat() {
+    private fun shootLive() {
         viewModelScope.launch {
-            shootCombatCartridgeUseCase()
+            shootLiveShellUseCase()
+            observeShells()
         }
     }
 }

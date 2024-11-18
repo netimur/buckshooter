@@ -1,19 +1,19 @@
-package com.netimur.buckshooter.ui.gamesetting.components.cartridge
+package com.netimur.buckshooter.ui.gamesetting.components.Shell
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import com.netimur.buckshooter.data.model.CartridgeType
+import com.netimur.buckshooter.data.model.ShellType
 import com.netimur.buckshooter.ui.gamesetting.components.countchips.CountChipsRow
 import com.netimur.buckshooter.ui.gamesetting.components.countchips.CountChipValue
 import com.netimur.buckshooter.ui.gamesetting.components.countchips.countChips
 import com.netimur.buckshooter.ui.gamesetting.components.counter.Counter
 
 @Composable
-internal fun BlankCartridgeController(
+internal fun BlankShellController(
     modifier: Modifier = Modifier,
-    blankCartridgesCount: Int,
+    blankShellsCount: Int,
     onAddButtonClick: () -> Unit,
     onMinusButtonClick: () -> Unit,
     onSelectCountChips: (CountChipValue) -> Unit,
@@ -21,15 +21,15 @@ internal fun BlankCartridgeController(
     isCounterShaking: Boolean
 ) {
     Column(modifier = modifier) {
-        Counter(count = blankCartridgesCount, isShaking = isCounterShaking)
-        CartridgeCard(
-            cartridgeType = CartridgeType.BLANK,
+        Counter(count = blankShellsCount, isShaking = isCounterShaking)
+        ShellCard(
+            shellType = ShellType.BLANK,
             onAddButtonClick = onAddButtonClick,
             onMinusButtonClick = onMinusButtonClick
         )
         CountChipsRow(
             chips = countChips,
-            count = blankCartridgesCount,
+            count = blankShellsCount,
             onSelectChips = onSelectCountChips,
             lazyListState = rememberLazyListState(),
             onResetChipClick = onResetChipClick

@@ -1,53 +1,53 @@
 package com.netimur.buckshooter.data.repository
 
 import com.netimur.buckshooter.core.foundation.utils.mapList
-import com.netimur.buckshooter.core.storage.dao.CartridgesDao
+import com.netimur.buckshooter.core.storage.dao.ShellsDao
 import com.netimur.buckshooter.data.mappers.toDomain
 import com.netimur.buckshooter.data.mappers.toEntity
-import com.netimur.buckshooter.data.model.Cartridge
+import com.netimur.buckshooter.data.model.Shell
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 
-class CartridgesRepositoryImpl(private val cartridgesDao: CartridgesDao) : CartridgesRepository {
-    override suspend fun addCartridge(cartridge: Cartridge) {
+class ShellsRepositoryImpl(private val shellsDao: ShellsDao) : ShellsRepository {
+    override suspend fun addShell(shell: Shell) {
         withContext(Dispatchers.IO) {
-            cartridgesDao.addCartridge(cartridge = cartridge.toEntity())
+            shellsDao.addShell(shell = shell.toEntity())
         }
     }
 
-    override suspend fun addCartridges(cartridges: List<Cartridge>) {
+    override suspend fun addShells(shells: List<Shell>) {
         withContext(Dispatchers.IO) {
-            cartridgesDao.addCartridges(cartridges = cartridges.mapList { toEntity() })
+            shellsDao.addShells(shells = shells.mapList { toEntity() })
         }
     }
 
-    override suspend fun removeBlankCartridge() {
+    override suspend fun removeBlankShell() {
         withContext(Dispatchers.IO) {
-            cartridgesDao.firstBlankCartridgeOrNull()?.let {
-                cartridgesDao.removeCartridge(it)
+            shellsDao.firstBlankShellOrNull()?.let {
+                shellsDao.removeShell(it)
             }
         }
     }
 
-    override suspend fun removeCombatCartridge() {
+    override suspend fun removeLiveShell() {
         withContext(Dispatchers.IO) {
-            cartridgesDao.firstCombatCartridgeOrNull()?.let {
-                cartridgesDao.removeCartridgeById(it.id)
+            shellsDao.firstLiveShellOrNull()?.let {
+                shellsDao.removeShellById(it.id)
             }
         }
     }
 
-    override fun observeCartridges(): Flow<List<Cartridge>> {
-        return cartridgesDao.observeCartridges().map {
+    override fun observeShells(): Flow<List<Shell>> {
+        return shellsDao.observeShells().map {
             it.mapList { toDomain() }
         }
     }
 
-    override suspend fun clearCartridges() {
+    override suspend fun clearShells() {
         withContext(Dispatchers.IO) {
-            cartridgesDao.clearCartridges()
+            shellsDao.clearShells()
         }
     }
 }

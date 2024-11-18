@@ -4,17 +4,23 @@ import androidx.compose.runtime.Immutable
 
 @Immutable
 internal data class GameProcessUIState(
-    val cartridgesCount: Int,
-    val blankCartridgesCount: Int,
-    val combatCartridgesCount: Int,
-    val isCartridgeSwapUsed: Boolean
+    val shellsCount: Int,
+    val blankShellsCount: Int,
+    val liveShellsCount: Int,
+    val isInverterEnabled: Boolean,
+    val burnerPhoneState: BurnerPhoneState
 ) {
     companion object {
         val empty = GameProcessUIState(
-            cartridgesCount = 10,
-            blankCartridgesCount = 3,
-            combatCartridgesCount = 7,
-            isCartridgeSwapUsed = false
+            shellsCount = 0,
+            blankShellsCount = 0,
+            liveShellsCount = 0,
+            isInverterEnabled = false,
+            burnerPhoneState = BurnerPhoneState(
+                isExpanded = false,
+                selectedShellType = null,
+                selectedOrderNumber = null
+            )
         )
     }
 }

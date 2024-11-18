@@ -18,18 +18,18 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.netimur.buckshooter.ui.gamesetting.components.cartridge.BlankCartridgeController
-import com.netimur.buckshooter.ui.gamesetting.components.cartridge.CombatCartridgeController
-import com.netimur.buckshooter.ui.gamesetting.event.AddBlankCartridgeEvent
-import com.netimur.buckshooter.ui.gamesetting.event.AddCombatCartridgeEvent
+import com.netimur.buckshooter.ui.gamesetting.components.Shell.BlankShellController
+import com.netimur.buckshooter.ui.gamesetting.components.Shell.LiveShellController
+import com.netimur.buckshooter.ui.gamesetting.event.AddBlankShellEvent
+import com.netimur.buckshooter.ui.gamesetting.event.AddLiveShellEvent
 import com.netimur.buckshooter.ui.gamesetting.event.ApplySettingEvent
 import com.netimur.buckshooter.ui.gamesetting.event.GameSettingEvent
-import com.netimur.buckshooter.ui.gamesetting.event.MinusBlankCartridgeEvent
-import com.netimur.buckshooter.ui.gamesetting.event.MinusCombatCartridgeEvent
-import com.netimur.buckshooter.ui.gamesetting.event.ResetBlankCartridgesCountEvent
-import com.netimur.buckshooter.ui.gamesetting.event.ResetCombatCartridgesCountEvent
-import com.netimur.buckshooter.ui.gamesetting.event.SelectBlankCartridgeChipsEvent
-import com.netimur.buckshooter.ui.gamesetting.event.SelectCombatCartridgeChipsEvent
+import com.netimur.buckshooter.ui.gamesetting.event.MinusBlankShellEvent
+import com.netimur.buckshooter.ui.gamesetting.event.MinusLiveShellEvent
+import com.netimur.buckshooter.ui.gamesetting.event.ResetBlankShellsCountEvent
+import com.netimur.buckshooter.ui.gamesetting.event.ResetLiveShellsCountEvent
+import com.netimur.buckshooter.ui.gamesetting.event.SelectBlankShellChipsEvent
+import com.netimur.buckshooter.ui.gamesetting.event.SelectLiveShellChipsEvent
 
 @Composable
 internal fun GameSettingScreen(startGame: () -> Unit, viewModel: GameSettingViewModel) {
@@ -63,39 +63,39 @@ private fun GameSettingScreenContent(
                     horizontalArrangement = Arrangement.SpaceAround
                 ) {
                     Column {
-                        BlankCartridgeController(
+                        BlankShellController(
                             modifier = Modifier.fillMaxWidth(),
-                            blankCartridgesCount = uiState.blankCount,
+                            blankShellsCount = uiState.blankCount,
                             onAddButtonClick = {
-                                handleEvent(AddBlankCartridgeEvent)
+                                handleEvent(AddBlankShellEvent)
                             },
                             onMinusButtonClick = {
-                                handleEvent(MinusBlankCartridgeEvent)
+                                handleEvent(MinusBlankShellEvent)
                             },
                             onSelectCountChips = { selectedChips ->
-                                handleEvent(SelectBlankCartridgeChipsEvent(selectedChips = selectedChips))
+                                handleEvent(SelectBlankShellChipsEvent(selectedChips = selectedChips))
                             },
                             onResetChipClick = {
-                                handleEvent(ResetBlankCartridgesCountEvent)
+                                handleEvent(ResetBlankShellsCountEvent)
                             },
                             isCounterShaking = uiState.isBlankCounterShaking
                         )
-                        CombatCartridgeController(
+                        LiveShellController(
                             modifier = Modifier.fillMaxWidth(),
-                            combatCartridgesCount = uiState.combatCount,
+                            LiveShellsCount = uiState.LiveCount,
                             onAddButtonClick = {
-                                handleEvent(AddCombatCartridgeEvent)
+                                handleEvent(AddLiveShellEvent)
                             },
                             onMinusButtonClick = {
-                                handleEvent(MinusCombatCartridgeEvent)
+                                handleEvent(MinusLiveShellEvent)
                             },
                             onSelectCountChips = { selectedChips ->
-                                handleEvent(SelectCombatCartridgeChipsEvent(selectedChips))
+                                handleEvent(SelectLiveShellChipsEvent(selectedChips))
                             },
                             onResetChipClick = {
-                                handleEvent(ResetCombatCartridgesCountEvent)
+                                handleEvent(ResetLiveShellsCountEvent)
                             },
-                            isCounterShaking = uiState.isCombatCounterShaking
+                            isCounterShaking = uiState.isLiveCounterShaking
                         )
                     }
                 }

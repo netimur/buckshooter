@@ -4,12 +4,12 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "cartridges")
-data class CartridgeEntity(
+@Entity(tableName = "shells")
+data class ShellEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
-    @ColumnInfo(name = "cartridge_type")
-    val cartridgeType: String,
-    @ColumnInfo(name = "cartridge_ordinal_number")
+    @ColumnInfo(name = "shell_type")
+    val shellType: String,
+    @ColumnInfo(name = "shell_ordinal_number")
     val number: Int?
 )

@@ -1,3 +1,3 @@
 package com.netimur.buckshooter.ui.gamesetting.event
 
-internal data object MinusBlankCartridgeEvent : GameSettingEvent
+internal data object MinusBlankShellEvent : GameSettingEvent

@@ -5,9 +5,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 
 @Composable
-internal fun CombatCartridgesCount(modifier: Modifier = Modifier, combatCartridgesCount: Int) {
+internal fun LiveShellsCount(modifier: Modifier = Modifier, LiveShellsCount: Int) {
     Text(
         modifier = modifier,
-        text = "Combat cartridges: $combatCartridgesCount"
+        text = "Live Shells: $LiveShellsCount"
     )
 }

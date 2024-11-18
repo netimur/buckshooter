@@ -6,9 +6,9 @@ import androidx.compose.ui.Modifier
 
 
 @Composable
-internal fun TotalCartridgesCount(modifier: Modifier = Modifier, totalCount: Int) {
+internal fun TotalShellsCount(modifier: Modifier = Modifier, totalCount: Int) {
     Text(
         modifier = modifier,
-        text = "Total cartridges: $totalCount"
+        text = "Total Shells: $totalCount"
     )
 }

@@ -5,15 +5,15 @@ import androidx.compose.runtime.Immutable
 @Immutable
 data class GameSettingUIState(
     val blankCount: Int,
-    val combatCount: Int,
+    val LiveCount: Int,
     val isBlankCounterShaking: Boolean,
-    val isCombatCounterShaking: Boolean,
+    val isLiveCounterShaking: Boolean,
 ) {
     companion object {
         val empty = GameSettingUIState(
             blankCount = 0,
-            combatCount = 0,
-            isCombatCounterShaking = false,
+            LiveCount = 0,
+            isLiveCounterShaking = false,
             isBlankCounterShaking = false
         )
     }

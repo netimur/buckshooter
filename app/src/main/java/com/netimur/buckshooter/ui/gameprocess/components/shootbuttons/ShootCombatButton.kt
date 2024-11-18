@@ -2,13 +2,13 @@ package com.netimur.buckshooter.ui.gameprocess.components.shootbuttons
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import com.netimur.buckshooter.data.model.CartridgeType
+import com.netimur.buckshooter.data.model.ShellType
 
 @Composable
-internal fun ShootCombatButton(modifier: Modifier = Modifier, onShootCombat: () -> Unit) {
+internal fun ShootLiveButton(modifier: Modifier = Modifier, onShootLive: () -> Unit) {
     ShootButton(
         modifier = modifier,
-        onClick = onShootCombat,
-        cartridgeType = CartridgeType.COMBAT
+        onClick = onShootLive,
+        shellType = ShellType.LIVE
     )
 }

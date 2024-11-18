@@ -1,7 +1,7 @@
 package com.netimur.buckshooter.data.model
 
-enum class CartridgeType {
+enum class ShellType {
     BLANK,
-    COMBAT,
+    LIVE,
     UNKNOWN
 }

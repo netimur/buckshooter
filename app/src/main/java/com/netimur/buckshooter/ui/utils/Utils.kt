@@ -1,12 +1,12 @@
 package com.netimur.buckshooter.ui.utils
 
 import androidx.compose.ui.graphics.Color
-import com.netimur.buckshooter.data.model.CartridgeType
+import com.netimur.buckshooter.data.model.ShellType
 
-internal fun CartridgeType.getSettingColor(): Color {
+internal fun ShellType.getSettingColor(): Color {
     return when (this) {
-        CartridgeType.BLANK -> Color(0xFF1770B8)
-        CartridgeType.COMBAT -> Color(0xFFB81717)
-        CartridgeType.UNKNOWN -> Color.White
+        ShellType.BLANK -> Color(0xFF1770B8)
+        ShellType.LIVE -> Color(0xFFB81717)
+        ShellType.UNKNOWN -> Color.White
     }
 }

@@ -1,8 +1,8 @@
 package com.netimur.buckshooter.ui.gameprocess.event
 
-import com.netimur.buckshooter.data.model.CartridgeType
+import com.netimur.buckshooter.data.model.ShellType
 
 internal data class UsePhoneEvent(
-    val cartridgeType: CartridgeType,
+    val shellType: ShellType,
     val orderNumber: Int
 ) : GameProcessEvent

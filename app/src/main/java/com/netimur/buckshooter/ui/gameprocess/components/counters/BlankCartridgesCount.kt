@@ -5,9 +5,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 
 @Composable
-internal fun BlankCartridgesCount(modifier: Modifier = Modifier, blankCartridgesCount: Int) {
+internal fun BlankShellsCount(modifier: Modifier = Modifier, blankShellsCount: Int) {
     Text(
         modifier = modifier,
-        text = "Blank cartridges: $blankCartridgesCount"
+        text = "Blank Shells: $blankShellsCount"
     )
 }

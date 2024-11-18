@@ -3,20 +3,20 @@ package com.netimur.buckshooter.ui.gamesetting
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.netimur.buckshooter.data.model.Cartridge
-import com.netimur.buckshooter.data.model.CartridgeOrdinalNumber
-import com.netimur.buckshooter.data.model.CartridgeType
-import com.netimur.buckshooter.domain.usecases.LoadCartridgesUseCase
-import com.netimur.buckshooter.ui.gamesetting.event.AddBlankCartridgeEvent
-import com.netimur.buckshooter.ui.gamesetting.event.AddCombatCartridgeEvent
+import com.netimur.buckshooter.data.model.Shell
+import com.netimur.buckshooter.data.model.ShellOrdinalNumber
+import com.netimur.buckshooter.data.model.ShellType
+import com.netimur.buckshooter.domain.usecases.LoadShellsUseCase
+import com.netimur.buckshooter.ui.gamesetting.event.AddBlankShellEvent
+import com.netimur.buckshooter.ui.gamesetting.event.AddLiveShellEvent
 import com.netimur.buckshooter.ui.gamesetting.event.ApplySettingEvent
 import com.netimur.buckshooter.ui.gamesetting.event.GameSettingEvent
-import com.netimur.buckshooter.ui.gamesetting.event.MinusBlankCartridgeEvent
-import com.netimur.buckshooter.ui.gamesetting.event.MinusCombatCartridgeEvent
-import com.netimur.buckshooter.ui.gamesetting.event.ResetBlankCartridgesCountEvent
-import com.netimur.buckshooter.ui.gamesetting.event.ResetCombatCartridgesCountEvent
-import com.netimur.buckshooter.ui.gamesetting.event.SelectBlankCartridgeChipsEvent
-import com.netimur.buckshooter.ui.gamesetting.event.SelectCombatCartridgeChipsEvent
+import com.netimur.buckshooter.ui.gamesetting.event.MinusBlankShellEvent
+import com.netimur.buckshooter.ui.gamesetting.event.MinusLiveShellEvent
+import com.netimur.buckshooter.ui.gamesetting.event.ResetBlankShellsCountEvent
+import com.netimur.buckshooter.ui.gamesetting.event.ResetLiveShellsCountEvent
+import com.netimur.buckshooter.ui.gamesetting.event.SelectBlankShellChipsEvent
+import com.netimur.buckshooter.ui.gamesetting.event.SelectLiveShellChipsEvent
 import com.netimur.buckshooter.ui.gamesetting.navigation.OpenGameProcess
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -33,11 +33,11 @@ import javax.inject.Inject
 
 @HiltViewModel
 internal class GameSettingViewModel @Inject constructor(
-    private val loadCartridgesUseCase: LoadCartridgesUseCase
+    private val loadShellsUseCase: LoadShellsUseCase
 ) : ViewModel() {
-    private val combatCartridgesFlow = MutableStateFlow(0)
-    private val blankCartridgesFlow = MutableStateFlow(0)
-    private val isCombatCounterShakingFlow = MutableStateFlow(false)
+    private val liveShellsFlow = MutableStateFlow(0)
+    private val blankShellsFlow = MutableStateFlow(0)
+    private val isLiveCounterShakingFlow = MutableStateFlow(false)
     private val isBlankCounterShakingFlow = MutableStateFlow(false)
 
     private val _navigationEvent: MutableSharedFlow<OpenGameProcess> =
@@ -45,15 +45,15 @@ internal class GameSettingViewModel @Inject constructor(
     val navigationEvent = _navigationEvent.asSharedFlow()
 
     val uiState = combine(
-        combatCartridgesFlow,
-        blankCartridgesFlow,
-        isCombatCounterShakingFlow,
+        liveShellsFlow,
+        blankShellsFlow,
+        isLiveCounterShakingFlow,
         isBlankCounterShakingFlow
-    ) { combatCartridges, blankCartridges, isCombatCounterShaking, isBlankCounterShaking ->
+    ) { liveShells, blankShells, isLiveCounterShaking, isBlankCounterShaking ->
         GameSettingUIState(
-            blankCount = blankCartridges,
-            combatCount = combatCartridges,
-            isCombatCounterShaking = isCombatCounterShaking,
+            blankCount = blankShells,
+            LiveCount = liveShells,
+            isLiveCounterShaking = isLiveCounterShaking,
             isBlankCounterShaking = isBlankCounterShaking
         )
     }.flowOn(
@@ -66,31 +66,31 @@ internal class GameSettingViewModel @Inject constructor(
 
     fun handleEvent(event: GameSettingEvent) {
         when (event) {
-            AddBlankCartridgeEvent -> addBlank()
-            AddCombatCartridgeEvent -> addCombat()
-            MinusBlankCartridgeEvent -> minusBlank()
-            MinusCombatCartridgeEvent -> minusCombat()
-            is SelectBlankCartridgeChipsEvent -> {
-                setBlankCartridgesCount(count = event.selectedChips.value)
+            AddBlankShellEvent -> addBlank()
+            AddLiveShellEvent -> addLive()
+            MinusBlankShellEvent -> minusBlank()
+            MinusLiveShellEvent -> minusLive()
+            is SelectBlankShellChipsEvent -> {
+                setBlankShellsCount(count = event.selectedChips.value)
             }
 
-            is SelectCombatCartridgeChipsEvent -> {
-                setCombatCartridgesCount(count = event.selectedChips.value)
+            is SelectLiveShellChipsEvent -> {
+                setLiveShellsCount(count = event.selectedChips.value)
             }
 
-            ResetBlankCartridgesCountEvent -> {
-                setBlankCartridgesCount(count = 0)
+            ResetBlankShellsCountEvent -> {
+                setBlankShellsCount(count = 0)
             }
 
-            ResetCombatCartridgesCountEvent -> {
-                setCombatCartridgesCount(count = 0)
+            ResetLiveShellsCountEvent -> {
+                setLiveShellsCount(count = 0)
             }
 
             ApplySettingEvent -> {
                 viewModelScope.launch {
                     runCatching {
-                        loadCartridgesUseCase(
-                            cartridges = generateBlankCartridges() + generateCombatCartridges()
+                        loadShellsUseCase(
+                            shells = generateBlankShells() + generateLiveShells()
                         )
                     }.onFailure {
                         // TODO Add Error handling
@@ -103,39 +103,39 @@ internal class GameSettingViewModel @Inject constructor(
         }
     }
 
-    private fun generateBlankCartridges(): List<Cartridge> {
-        val blankCartridgesCount = blankCartridgesFlow.value
-        return List(blankCartridgesCount) {
-            Cartridge(
-                orderNumber = CartridgeOrdinalNumber.Unknown,
-                cartridgeType = CartridgeType.BLANK
+    private fun generateBlankShells(): List<Shell> {
+        val blankShellsCount = blankShellsFlow.value
+        return List(blankShellsCount) {
+            Shell(
+                orderNumber = ShellOrdinalNumber.Unknown,
+                shellType = ShellType.BLANK
             )
         }
     }
 
-    private fun generateCombatCartridges(): List<Cartridge> {
-        val combatCartridgesCount = combatCartridgesFlow.value
-        return List(combatCartridgesCount) {
-            Cartridge(
-                orderNumber = CartridgeOrdinalNumber.Unknown,
-                cartridgeType = CartridgeType.COMBAT
+    private fun generateLiveShells(): List<Shell> {
+        val liveShellsCount = liveShellsFlow.value
+        return List(liveShellsCount) {
+            Shell(
+                orderNumber = ShellOrdinalNumber.Unknown,
+                shellType = ShellType.LIVE
             )
         }
     }
 
-    private fun minusCombat() {
-        combatCartridgesFlow.update {
+    private fun minusLive() {
+        liveShellsFlow.update {
             if (it > 0) {
                 it - 1
             } else {
-                isCombatCounterShakingFlow.update { true }
+                isLiveCounterShakingFlow.update { true }
                 it
             }
         }
     }
 
     private fun minusBlank() {
-        blankCartridgesFlow.update {
+        blankShellsFlow.update {
             if (it > 0) {
                 it - 1
             } else {
@@ -145,26 +145,26 @@ internal class GameSettingViewModel @Inject constructor(
         }
     }
 
-    private fun addCombat() {
-        combatCartridgesFlow.update {
+    private fun addLive() {
+        liveShellsFlow.update {
             it + 1
         }
     }
 
     private fun addBlank() {
-        blankCartridgesFlow.update {
+        blankShellsFlow.update {
             it + 1
         }
     }
 
-    private fun setBlankCartridgesCount(count: Int) {
-        blankCartridgesFlow.update {
+    private fun setBlankShellsCount(count: Int) {
+        blankShellsFlow.update {
             count
         }
     }
 
-    private fun setCombatCartridgesCount(count: Int) {
-        combatCartridgesFlow.update {
+    private fun setLiveShellsCount(count: Int) {
+        liveShellsFlow.update {
             count
         }
     }
