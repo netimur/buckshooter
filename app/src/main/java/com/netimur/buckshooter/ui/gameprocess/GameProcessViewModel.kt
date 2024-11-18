@@ -87,19 +87,11 @@ internal class GameProcessViewModel @Inject constructor(
             ShootLiveEvent -> shootLive()
             is UsePhoneEvent -> {}
             BurnerPhoneClickEvent -> {
-                burnerPhoneStateFlow.update {
-                    it.copy(
-                        isExpanded = true
-                    )
-                }
+                openBurnerPhone()
             }
 
             CloseBurnerPhoneEvent -> {
-                burnerPhoneStateFlow.update {
-                    it.copy(
-                        isExpanded = false
-                    )
-                }
+                closeBurnerPhone()
             }
 
             ResetBurnerPhoneOrderNumberEvent -> {}
@@ -119,6 +111,22 @@ internal class GameProcessViewModel @Inject constructor(
         viewModelScope.launch {
             shootLiveShellUseCase()
             observeShells()
+        }
+    }
+
+    private fun openBurnerPhone() {
+        burnerPhoneStateFlow.update {
+            it.copy(
+                isExpanded = true
+            )
+        }
+    }
+
+    private fun closeBurnerPhone() {
+        burnerPhoneStateFlow.update {
+            it.copy(
+                isExpanded = false
+            )
         }
     }
 }
