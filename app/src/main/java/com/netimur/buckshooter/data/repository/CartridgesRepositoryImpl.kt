@@ -25,13 +25,17 @@ class CartridgesRepositoryImpl(private val cartridgesDao: CartridgesDao) : Cartr
 
     override suspend fun removeBlankCartridge() {
         withContext(Dispatchers.IO) {
-            cartridgesDao.removeBlankCartridge()
+            cartridgesDao.firstBlankCartridgeOrNull()?.let {
+                cartridgesDao.removeCartridge(it)
+            }
         }
     }
 
     override suspend fun removeCombatCartridge() {
         withContext(Dispatchers.IO) {
-            cartridgesDao.removeCombatCartridge()
+            cartridgesDao.firstCombatCartridgeOrNull()?.let {
+                cartridgesDao.removeCartridge(it)
+            }
         }
     }
 

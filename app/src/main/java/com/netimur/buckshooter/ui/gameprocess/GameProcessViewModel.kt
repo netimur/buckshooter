@@ -88,6 +88,4 @@ internal class GameProcessViewModel @Inject constructor(
             shootCombatCartridgeUseCase()
         }
     }
-
-
 }
