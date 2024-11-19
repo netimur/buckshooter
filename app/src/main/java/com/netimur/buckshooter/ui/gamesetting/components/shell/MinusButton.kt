@@ -8,11 +8,11 @@ import com.netimur.buckshooter.data.model.ShellType
 import com.netimur.buckshooter.ui.utils.getSettingColor
 
 @Composable
-internal fun MinusButton(modifier: Modifier = Modifier, shellType: ShellType) {
+internal fun MinusButton(modifier: Modifier = Modifier) {
     Text(
         modifier = modifier,
         text = "-",
         style = MaterialTheme.typography.displaySmall,
-        color = shellType.getSettingColor()
+        color = MaterialTheme.colorScheme.tertiary
     )
 }

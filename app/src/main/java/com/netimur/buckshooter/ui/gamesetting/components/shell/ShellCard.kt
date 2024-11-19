@@ -36,7 +36,7 @@ internal fun ShellCard(
             )
             .border(
                 width = 2.dp,
-                color = shellType.getSettingColor(),
+                color = MaterialTheme.colorScheme.tertiary,
                 shape = RoundedCornerShape(corner = CornerSize(size = 16.dp))
             )
             .clip(
@@ -53,7 +53,7 @@ internal fun ShellCard(
             Box(
                 modifier = Modifier
                     .background(
-                        color = shellType.getSettingColor(),
+                        color = MaterialTheme.colorScheme.tertiary,
                         shape = RoundedCornerShape(corner = CornerSize(size = 16.dp))
                     )
                     .padding(end = 16.dp)
@@ -73,7 +73,7 @@ internal fun ShellCard(
                     )
                 )
             }
-            MinusButton(shellType = shellType)
+            MinusButton()
         }
     }
 }
