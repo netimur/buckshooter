@@ -1,10 +1,11 @@
-package com.netimur.buckshooter.ui.gamesetting.components.Shell
+package com.netimur.buckshooter.ui.gamesetting.components.shell
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.netimur.buckshooter.data.model.ShellType
+import com.netimur.buckshooter.ui.gamesetting.components.shell.ShellCard
 import com.netimur.buckshooter.ui.gamesetting.components.countchips.CountChipsRow
 import com.netimur.buckshooter.ui.gamesetting.components.countchips.CountChipValue
 import com.netimur.buckshooter.ui.gamesetting.components.countchips.countChips
@@ -13,7 +14,7 @@ import com.netimur.buckshooter.ui.gamesetting.components.counter.Counter
 @Composable
 internal fun LiveShellController(
     modifier: Modifier = Modifier,
-    LiveShellsCount: Int,
+    liveShellsCount: Int,
     onAddButtonClick: () -> Unit,
     onMinusButtonClick: () -> Unit,
     onSelectCountChips: (CountChipValue) -> Unit,
@@ -21,7 +22,7 @@ internal fun LiveShellController(
     isCounterShaking: Boolean
 ) {
     Column(modifier = modifier) {
-        Counter(count = LiveShellsCount, isShaking = isCounterShaking)
+        Counter(count = liveShellsCount, isShaking = isCounterShaking)
         ShellCard(
             shellType = ShellType.LIVE,
             onAddButtonClick = onAddButtonClick,
@@ -30,7 +31,7 @@ internal fun LiveShellController(
         CountChipsRow(
             lazyListState = rememberLazyListState(),
             chips = countChips,
-            count = LiveShellsCount,
+            count = liveShellsCount,
             onSelectChips = onSelectCountChips,
             onResetChipClick = onResetChipClick
         )

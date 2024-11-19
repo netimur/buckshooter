@@ -1,4 +1,4 @@
-package com.netimur.buckshooter.ui.gamesetting.components.Shell
+package com.netimur.buckshooter.ui.gamesetting.components.shell
 
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text

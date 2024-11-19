@@ -18,8 +18,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.netimur.buckshooter.ui.gamesetting.components.Shell.BlankShellController
-import com.netimur.buckshooter.ui.gamesetting.components.Shell.LiveShellController
+import com.netimur.buckshooter.ui.gamesetting.components.shell.BlankShellController
+import com.netimur.buckshooter.ui.gamesetting.components.shell.LiveShellController
 import com.netimur.buckshooter.ui.gamesetting.event.AddBlankShellEvent
 import com.netimur.buckshooter.ui.gamesetting.event.AddLiveShellEvent
 import com.netimur.buckshooter.ui.gamesetting.event.ApplySettingEvent
@@ -82,7 +82,7 @@ private fun GameSettingScreenContent(
                         )
                         LiveShellController(
                             modifier = Modifier.fillMaxWidth(),
-                            LiveShellsCount = uiState.LiveCount,
+                            liveShellsCount = uiState.LiveCount,
                             onAddButtonClick = {
                                 handleEvent(AddLiveShellEvent)
                             },
