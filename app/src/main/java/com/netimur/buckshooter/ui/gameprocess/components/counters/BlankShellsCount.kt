@@ -1,5 +1,6 @@
 package com.netimur.buckshooter.ui.gameprocess.components.counters
 
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -8,6 +9,8 @@ import androidx.compose.ui.Modifier
 internal fun BlankShellsCount(modifier: Modifier = Modifier, blankShellsCount: Int) {
     Text(
         modifier = modifier,
-        text = "Blank Shells: $blankShellsCount"
+        // TODO REFACTOR use stringResource with arguments, style names of shell types
+        text = "Blank shells: $blankShellsCount",
+        style = MaterialTheme.typography.titleMedium
     )
 }
