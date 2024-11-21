@@ -12,7 +12,7 @@ import dagger.hilt.components.SingletonComponent
 @InstallIn(SingletonComponent::class)
 class ShellsModule {
     @Provides
-    fun provideShellsRepository(ShellsDao: ShellsDao): ShellsRepository {
-        return ShellsRepositoryImpl(shellsDao = ShellsDao)
+    fun provideShellsRepository(shellsDao: ShellsDao): ShellsRepository {
+        return ShellsRepositoryImpl(shellsDao = shellsDao)
     }
 }
