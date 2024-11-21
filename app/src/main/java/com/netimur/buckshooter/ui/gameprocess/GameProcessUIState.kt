@@ -1,6 +1,10 @@
 package com.netimur.buckshooter.ui.gameprocess
 
 import androidx.compose.runtime.Immutable
+import com.netimur.buckshooter.data.model.ShellType
+import com.netimur.buckshooter.ui.gameprocess.alert.GameProcessAlert
+import com.netimur.buckshooter.ui.gameprocess.bottomsheet.GameProcessBottomSheet
+import com.netimur.buckshooter.ui.gameprocess.bottomsheet.NoneBottomSheet
 
 @Immutable
 internal data class GameProcessUIState(
@@ -8,7 +12,10 @@ internal data class GameProcessUIState(
     val blankShellsCount: Int,
     val liveShellsCount: Int,
     val isInverterEnabled: Boolean,
-    val burnerPhoneState: BurnerPhoneState
+    val burnerPhoneState: BurnerPhoneState,
+    val currentShellType: ShellType,
+    val bottomSheet: GameProcessBottomSheet,
+    val alert: GameProcessAlert
 ) {
     companion object {
         val empty = GameProcessUIState(
@@ -20,7 +27,10 @@ internal data class GameProcessUIState(
                 isExpanded = false,
                 selectedShellType = null,
                 selectedOrderNumber = null
-            )
+            ),
+            currentShellType = ShellType.UNKNOWN,
+            bottomSheet = NoneBottomSheet,
+            alert = GameProcessAlert.NoneAlert
         )
     }
 }

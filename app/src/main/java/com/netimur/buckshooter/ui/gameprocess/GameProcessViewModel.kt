@@ -6,8 +6,13 @@ import com.netimur.buckshooter.data.model.ShellType
 import com.netimur.buckshooter.data.repository.ShellsRepository
 import com.netimur.buckshooter.domain.usecases.ShootBlankShellUseCase
 import com.netimur.buckshooter.domain.usecases.ShootLiveShellUseCase
+import com.netimur.buckshooter.ui.gameprocess.alert.AreYouSureExitGameAlert
+import com.netimur.buckshooter.ui.gameprocess.alert.GameProcessAlert
+import com.netimur.buckshooter.ui.gameprocess.bottomsheet.NoneBottomSheet
 import com.netimur.buckshooter.ui.gameprocess.event.BurnerPhoneClickEvent
 import com.netimur.buckshooter.ui.gameprocess.event.CloseBurnerPhoneEvent
+import com.netimur.buckshooter.ui.gameprocess.event.DismissDialogEvent
+import com.netimur.buckshooter.ui.gameprocess.event.EndGameButtonClickEvent
 import com.netimur.buckshooter.ui.gameprocess.event.GameProcessEvent
 import com.netimur.buckshooter.ui.gameprocess.event.ResetBurnerPhoneOrderNumberEvent
 import com.netimur.buckshooter.ui.gameprocess.event.SelectBurnerPhoneShellOrderEvent
@@ -43,17 +48,23 @@ internal class GameProcessViewModel @Inject constructor(
             selectedShellType = null
         )
     )
+    private val dialogFlow = MutableStateFlow<GameProcessAlert>(GameProcessAlert.NoneAlert)
+
     val uiState: StateFlow<GameProcessUIState> = combine(
         blankShellsCountFlow,
         liveShellsCountFlow,
-        burnerPhoneStateFlow
-    ) { blankShellsCount, liveShellsCount, burnerPhoneState ->
+        burnerPhoneStateFlow,
+        dialogFlow
+    ) { blankShellsCount, liveShellsCount, burnerPhoneState, dialog ->
         GameProcessUIState(
             shellsCount = blankShellsCount + liveShellsCount,
             blankShellsCount = blankShellsCount,
             liveShellsCount = liveShellsCount,
             isInverterEnabled = false,
-            burnerPhoneState = burnerPhoneState
+            burnerPhoneState = burnerPhoneState,
+            currentShellType = ShellType.UNKNOWN,
+            bottomSheet = NoneBottomSheet,
+            alert = dialog
         )
     }.flowOn(Dispatchers.Default).stateIn(
         scope = viewModelScope,
@@ -97,6 +108,11 @@ internal class GameProcessViewModel @Inject constructor(
             ResetBurnerPhoneOrderNumberEvent -> {}
             is SelectBurnerPhoneShellOrderEvent -> {}
             is SelectBurnerPhoneShellTypeEvent -> {}
+            EndGameButtonClickEvent -> {
+                showDialog(AreYouSureExitGameAlert)
+            }
+
+            DismissDialogEvent -> {}
         }
     }
 
@@ -128,5 +144,13 @@ internal class GameProcessViewModel @Inject constructor(
                 isExpanded = false
             )
         }
+    }
+
+    private fun showDialog(dialog: GameProcessAlert) {
+        dialogFlow.update { dialog }
+    }
+
+    private fun closeDialog() {
+        dialogFlow.update { GameProcessAlert.NoneAlert }
     }
 }
